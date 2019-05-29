@@ -1,16 +1,11 @@
 buildscript { 
-   ext { 
-       springBootVersion = '2.1.1.RELEASE' 
-       springCloudConnectorsVersion = '2.0.1.RELEASE' 
-   } 
-
  
    repositories { 
        mavenCentral() 
    } 
 
     dependencies { 
-       classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}") 
+       classpath("org.springframework.boot:spring-boot-gradle-plugin:2.1.5.RELEASE") 
    } 
 } 
 
@@ -23,8 +18,8 @@ apply plugin: 'io.spring.dependency-management'
 group = 'com.org.cap'
 version = '1.0'
 
-sourceCompatibility = '11'
-targetCompatibility = '11'
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 bootJar { 
     baseName = 'capgemini' 
@@ -43,7 +38,8 @@ dependencies {
 	compile 'mysql:mysql-connector-java'
 	compile "org.springframework.boot:spring-boot-starter-data-jpa"
 	compile 'org.springframework.cloud:spring-cloud-spring-service-connector' 
- 	compile 'org.springframework.cloud:spring-cloud-cloudfoundry-connector' 
+ 	compile 'org.springframework.cloud:spring-cloud-cloudfoundry-connector'
+ 	compile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.1' 
 	
 	// Testing 
     testCompile "junit:junit" 

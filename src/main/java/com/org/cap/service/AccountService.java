@@ -1,17 +1,26 @@
 package com.org.cap.service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.org.cap.dto.Account;
 import com.org.cap.dto.AccountNumber;
 import com.org.cap.dto.AccountRegistration;
 import com.org.cap.dto.AccountRegistrationResponse;
+import com.org.cap.dto.AuthJson;
+import com.org.cap.dto.ResponseBean;
 import com.org.cap.exception.ResourceNotFoundException;
 import com.org.cap.repository.AccountCrudRepository;
 
@@ -29,7 +38,7 @@ public class AccountService {
 		AccountNumber accNum = new AccountNumber(
 				accountCrudRepository.save(accountResponse).getAccount_num());
 		AccountRegistrationResponse response = new AccountRegistrationResponse();
-		response.setAccountNumber(accNum.getAccount_num());   
+		response.setAccountNumber(String.valueOf(accNum.getAccount_num()));   
 		response.setSuccess(true);
 		logger.error("Account Number Generated : " + accNum.getAccount_num());
 		return response;
@@ -57,6 +66,35 @@ public class AccountService {
 		List<Account> accountList = new ArrayList<Account>();
 		accountList = (List<Account>) accountCrudRepository.findAll();
 		return accountList;
+		
+	}
+	
+	public String isTokenValid(String token) {
+		 final String uri = "https://token-001-fluent-klipspringer.cfapps.io/checktokenuser";
+		 ResponseBean responseBean = null;
+			try {
+				responseBean = new ResponseBean();
+		 RestTemplate restTemplate = new RestTemplate();
+		    HttpHeaders headers = new HttpHeaders();
+		    headers.add("authorization", token);
+		    headers.setContentType(MediaType.APPLICATION_JSON);
+		    AuthJson authJson = new AuthJson();
+		    authJson.setEmail("aaj@gmail.com");
+		    authJson.setToken(token);
+		    ObjectMapper  mapper = new ObjectMapper();
+		    String authJsonString;
+		
+				authJsonString = mapper.writeValueAsString(authJson);
+			
+		    HttpEntity<String> entity = new HttpEntity<>(authJsonString, headers);
+
+		    String response= restTemplate.postForObject(uri, entity, String.class);
+		    responseBean = mapper.readValue(response, ResponseBean.class);
+		    logger.error("response status: " + responseBean.getStatus());
+			} catch (Exception e) {
+				responseBean.setStatus("fail");
+			}
+		return responseBean.getStatus();
 		
 	}
 
