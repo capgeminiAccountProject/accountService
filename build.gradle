@@ -27,7 +27,7 @@ bootJar {
     version =  '0.1.0' 
  } 
 
-
+    
 repositories {
 	mavenCentral()
 }
@@ -41,9 +41,15 @@ dependencies {
 	compile 'org.springframework.cloud:spring-cloud-spring-service-connector' 
  	compile 'org.springframework.cloud:spring-cloud-cloudfoundry-connector'
  	compile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.1' 
+	compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'
+ 	
+ 	compileOnly 'org.projectlombok:lombok:1.18.4'
+    annotationProcessor 'org.projectlombok:lombok:1.18.4'
 	
 	// Testing 
-    testCompile "junit:junit" 
+	testCompile group: 'org.springframework', name: 'spring-test', version: '2.5'
+	testCompile group: 'io.rest-assured', name: 'spring-mock-mvc', version: '3.0.0'
+		
 	testCompile "org.springframework.boot:spring-boot-starter-test" 
 
 } 
