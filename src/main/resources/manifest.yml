@@ -1,5 +1,5 @@
 applications:
-- name: accountService
+- name: capgemini-0.1.0
   memory: 768M
   instances: 1
   random-route: true
